@@ -27,9 +27,8 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
 
   let array = []
 
-  //READ
+  // //READ
   app.get("/api/workouts", (req, res) => {
-    //what do I need to put in here to get the current workout
     console.log(Workout, "Here:")
     Workout.find({})
     .then(data => {
@@ -57,24 +56,26 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
 
   //CREATE
   app.post("/api/workouts", (req, res) => {
-    console.log(req.body, "POST:")
-  Workout.create({
-      // exercises: [
-      //   {
-      //     type: req.body.type,
-      //     name: req.body.name,
-      //     duration: req.body.duration,
-      //     weight: req.body.weight,
-      //     reps: req.body.reps,
-      //     sets: req.body.sets
-      //   }]
-    }).then( data => {
+    Workout.create(
+    {exercises: 
+      [{
+        type: req.body.type, 
+        name: req.body.name, 
+        duration: req.body.duration,
+      }]
+    }, function (err, data){
+      if (err) return handleError(err);
+      // saved!
+      console.log(data)
+
+    }.then(data => {
       res.json(data)
     }).catch(err => {
       console.log(err)
       res.json(err)
-    })
-  ;
+    })  )
+    
+  
 
   })
 
