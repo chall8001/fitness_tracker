@@ -68,14 +68,14 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
       // saved!
       console.log(data)
 
+      //this line is where I get the error
     }.then(data => {
       res.json(data)
     }).catch(err => {
       console.log(err)
       res.json(err)
-    })  )
+    }))
     
-  
 
   })
 
