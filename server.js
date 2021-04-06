@@ -17,6 +17,8 @@ app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { useNewUrlParser: true, useFindAndModify: false });
 
+//html files
+
   app.get("/exercise", (req, res) => {
     res.sendFile(path.join(__dirname, "/public/exercise.html"));
   });
@@ -25,9 +27,9 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
     res.sendFile(path.join(__dirname, "/public/stats.html"));
   });
 
-  let array = []
 
-  // //READ
+
+  // READ
   app.get("/api/workouts", (req, res) => {
     console.log(Workout, "Here:")
     Workout.find({})
@@ -43,9 +45,13 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
 
   //UPDATE
   app.put("/api/workouts/:id", (req, res) => {
-    Workout.findByIdAndUpdate(req.params.id, {
-      $push:{exercises: req.body}
-    }, { new: true, runValidators: true })
+    Workout.findByIdAndUpdate(req.params.id, 
+      {exercises: req.body}, 
+      { new: true}, 
+      err => {
+        console.log(err)
+      }
+    )
     .then( data => { 
       res.json(data)
     }).catch(
@@ -53,8 +59,9 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
         console.log(err)
         res.json(err)
       })
+    })
     
-  })
+  
 
   //CREATE
   app.post("/api/workouts", (req, res) => {
@@ -68,15 +75,6 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
     
 
   })
-
-  //creating is for posting 
-
-
-  //find by id and update 
-
-  //post, get, put
-
-  //create. find id, update, aggregate
 
 app.listen(3000, () => {
     console.log("App running on port 3000!");
