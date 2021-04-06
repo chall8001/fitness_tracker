@@ -45,9 +45,10 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
 
   //UPDATE
   app.put("/api/workouts/:id", (req, res) => {
+    console.log(`THIS IS MY LOG: ${JSON.stringify(req.body)}`)
     Workout.findByIdAndUpdate(req.params.id, 
-      {exercises: req.body}, 
-      { new: true}, 
+      { $set: {exercises: req.body} }, 
+      { new: true, runValidators: true}, 
       err => {
         console.log(err)
       }
