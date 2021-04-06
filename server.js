@@ -32,9 +32,11 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
     console.log(Workout, "Here:")
     Workout.find({})
     .then(data => {
+      console.log(data)
       res.json(data);
     })
     .catch(err => {
+      console.log(err)
       res.json(err);
     });
   })
@@ -56,25 +58,13 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
 
   //CREATE
   app.post("/api/workouts", (req, res) => {
-    Workout.create(
-    {exercises: 
-      [{
-        type: req.body.type, 
-        name: req.body.name, 
-        duration: req.body.duration,
-      }]
-    }, function (err, data){
-      if (err) return handleError(err);
-      // saved!
-      console.log(data)
-
-      //this line is where I get the error
-    }.then(data => {
+    Workout.create({}
+    ).then(data => {
       res.json(data)
     }).catch(err => {
       console.log(err)
       res.json(err)
-    }))
+    })
     
 
   })
