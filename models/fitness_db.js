@@ -3,12 +3,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const workoutSchema = new Schema({
-    day: {
-    type: Date, 
-    // for some reason this snippet is giving me an issue
-    // default: () => new Date(),
-    },
-    exercises: {
+    day: Date, 
+    exercises: [{
         type: String, 
         name: String, 
         duration: Number, 
@@ -16,7 +12,7 @@ const workoutSchema = new Schema({
         reps: Number, 
         sets: Number, 
         distance: Number,
-    }
+    }]
 
 }, 
 //added this snippet

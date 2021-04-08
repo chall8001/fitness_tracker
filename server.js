@@ -30,18 +30,25 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
 
 
   // READ
-  app.get("/api/workouts", (req, res) => {
-    console.log(Workout, "Here:")
-    Workout.find({})
-    .then(data => {
-      console.log(data)
-      res.json(data);
-    })
-    .catch(err => {
-      console.log(err)
-      res.json(err);
-    });
-  })
+  app.get('/api/workouts', (req, res) => {
+    Workout.aggregate([
+      {
+        $addFields: {
+          totalDuration: {
+            $sum: '$exercises.duration',
+          },
+        },
+      },
+    ])
+      .then((dbWorkouts) => {
+        console.log(dbWorkouts)
+        res.json(dbWorkouts);
+      })
+      .catch((err) => {
+        console.log(err)
+        res.json(err);
+      });
+  });
 
   //UPDATE
   app.put("/api/workouts/:id", (req, res) => {
@@ -66,16 +73,36 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
 
   //CREATE
   app.post("/api/workouts", (req, res) => {
-    Workout.create({}
+    Workout.create({day: new Date()}
     ).then(data => {
       res.json(data)
     }).catch(err => {
       console.log(err)
       res.json(err)
     })
-    
-
   })
+
+  app.get('/api/workouts/range', (req, res) => {
+    Workout.aggregate([
+      {
+        $addFields: {
+          totalDuration: {
+            $sum: '$exercises.duration',
+          },
+        },
+      },
+    ])
+      .sort({ _id: -1 })
+      .limit(7)
+      .then((dbWorkouts) => {
+        console.log(dbWorkouts);
+        res.json(dbWorkouts);
+      })
+      .catch((err) => {
+        console.log(err)
+        res.json(err);
+      });
+  });
 
 app.listen(3000, () => {
     console.log("App running on port 3000!");
